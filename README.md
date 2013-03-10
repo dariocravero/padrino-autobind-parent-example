@@ -37,3 +37,9 @@ Thanks to @postmodern for asking if this would be possible... Now it is! :)
 There's one gotcha though, you need to patch Padrino, unless [this patch](https://github.com/padrino/padrino-framework/pull/1097) gets accepted.
 
 Thoughts?
+
+## Presenting the amazing `padrino_route_added` hook! 
+
+We have to document these hooks better! They're so useful!.. :)
+
+Will try to draft something soon.
