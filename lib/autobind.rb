@@ -3,18 +3,20 @@ module Padrino
     class << self
       def padrino_route_added(route, verb, path, args, options, block)
         unless route.parent.nil?
-          logger.debug "Looking after parent #{route.parent} for #{verb}:#{path}. You can now use @#{route.parent}"
+          logger.debug "Looking after parent #{route.parent} for #{verb}:#{path}. You can now use #{Array(route.parent).map {|r| '@' + r.to_s}.join(', ')}"
 
           route.before_filters do
-            param_id = :"#{route.parent}_id" 
-            if params.include? param_id
-              instance_variable_set "@#{route.parent}", Object.const_get(route.parent.capitalize).find(params[param_id])
+            (route.parent.is_a?(Array) ? route.parent : [route.parent]).each do |parent|
+              param_id = :"#{parent}_id" 
+              if params.include? param_id
+                instance_variable_set "@#{parent}", Object.const_get(parent.capitalize).find(params[param_id])
+              end
             end
           end
 
           route.after_filters do
-            if params.include? :"#{route.parent}_id"
-              remove_instance_variable "@#{route.parent}"
+            (route.parent.is_a?(Array) ? route.parent : [route.parent]).each do |parent|
+              remove_instance_variable("@#{parent}") if params.include? :"#{parent}_id"
             end
           end
         end
